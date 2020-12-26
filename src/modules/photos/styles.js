@@ -8,11 +8,13 @@ const styles = StyleSheet.create({
   },
   photoCard: {
     width: '33%',
+    aspectRatio: 1
   },
   photo: {
-    width: '100%',
+    width: '99%',
+    height: '99%',
     aspectRatio: 1,
-  }
+  },
 });
 
 export default styles;

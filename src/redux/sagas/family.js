@@ -19,7 +19,7 @@ function * joinFamilyHandler({ payload: { _id, status }}) {
   try {
     yield put({ type: actions.APP_LOADING, payload: true });
     const userState = yield select(userSelector);
-    const result = yield call(patch, 'security/invitation', _id, { active: status });
+    const result = yield call(patch, 'security/invitation', _id, { active: false });
 
     if (status) {
       const user = yield call(patch, 'security/user', userState._id, { account_id: result.account_id });
@@ -27,11 +27,13 @@ function * joinFamilyHandler({ payload: { _id, status }}) {
 
       const promiseArr = [
         findCall({ service: 'content/album', payload: { account_id: user.account_id } }),
+        getCall('security/account', user.account_id),
       ];
   
-      const [albums] = yield Promise.all(promiseArr);
+      const [albums, account] = yield Promise.all(promiseArr);
   
       yield put({ type: actions.SET_ALBUMS, payload: albums });
+      yield put({ type: actions.SET_FAMILY, payload: account });
     }
 
     yield put({ type: actions.APP_LOADING, payload: false });
@@ -47,6 +49,11 @@ const findCall = async ({ service, payload={} }) => {
   return data;
 };
 
+const getCall = async (service, id) => {
+  const { data } = await api.service(service).get(id);
+  return data;
+};
+
 const patch = async (service, id, data) => {
   return api.service(service).patch(id, data);
-}
+};

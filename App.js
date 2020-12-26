@@ -22,7 +22,6 @@ export default function App() {
     });
 
     setLoaded(true);
-    console.log('inn');
   }
 
   return loaded ? (

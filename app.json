@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "app-photo-album",
-    "slug": "app-photo-album",
+    "name": "Cherished",
+    "slug": "prod-cherished",
     "version": "1.0.0",
     "orientation": "default",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo-cherished.png",
     "splash": {
       "image": "./assets/splash-cherished.png",
       "resizeMode": "contain",

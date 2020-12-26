@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import colors from '../shared/styles/colors';
 
 const Logo = () => {  
+  const family = useSelector(state => state.user.family);
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>
-        The Sodie Family
+        {family.name || 'Cherished'}
       </Text>
     </View>
   );

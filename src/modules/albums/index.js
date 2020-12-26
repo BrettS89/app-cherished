@@ -23,19 +23,23 @@ const Albums = ({ navigation }) => {
       let { data: invitation } = await api.service('security/invitation')
         .find({ email: user.email });
 
-        invitation = invitation.find(i => i.active);
+      invitation = invitation.find(i => i.active);
 
-        if (invitation) {
-        setInvite(invitation);
-        setInviteModal(true);
+      if (invitation) {
+        if (invitation.force) {
+          acceptInvitation(true, invitation._id);
+        } else {
+          setInvite(invitation);
+          setInviteModal(true);
+        }
       }
     } catch(e) {
       console.log(e)
     }
   };
 
-  const acceptInvitation = status => {
-    dispatch({ type: JOIN_FAMILY, payload: { _id: invite._id, status } });
+  const acceptInvitation = (status, id = null) => {
+    dispatch({ type: JOIN_FAMILY, payload: { _id: id || invite._id, status } });
     setInviteModal(false);
   };
 

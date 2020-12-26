@@ -2,14 +2,14 @@ const url = env => {
   switch(env) {
     case 'LOCAL':
       // return 'http://localhost:4000'
-      return 'http://ac37fb2031d5.ngrok.io';
+      return 'http://4560a85b7e05.ngrok.io';
 
     case 'STAGING':
-      return 'tbd';
+      return 'https://staging-api-cherished.herokuapp.com';
 
-    case 'PRODUCTION':
-      return 'tbd';
+    case 'PROD':
+      return 'https://prod-api-cherished.herokuapp.com';
   }
 };
 
-export default url('LOCAL');
+export default url('PROD');

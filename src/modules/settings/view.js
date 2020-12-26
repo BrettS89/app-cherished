@@ -4,7 +4,7 @@ import styles from './styles';
 import Text from '../../components/Txt';
 import alert from '../../utilities/alert';
 
-const SettingsView = () => {
+const SettingsView = ({ logout }) => {
   return (
     <View style={styles.container}> 
       <View style={styles.row}>
@@ -17,7 +17,7 @@ const SettingsView = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.row}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={logout}>
           <Text styles={styles.text}>
             Log out
           </Text>

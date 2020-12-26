@@ -10,6 +10,7 @@ import alert from '../../utilities/alert';
 export default [
   initializeAppWatcher,
   loginWatcher,
+  logoutWatcher,
   registerWatcher,
 ];
 
@@ -25,6 +26,10 @@ function * initializeAppWatcher() {
   yield takeLatest(actions.INITIALIZE_APP, initializeAppHandler);
 }
 
+function * logoutWatcher () {
+  yield takeLatest(actions.ON_LOGOUT, logoutHandler);
+}
+
 function * initializeAppHandler({ payload }) {
   try {
     const user = yield call(findCall, { service: 'security/session' });
@@ -33,11 +38,13 @@ function * initializeAppHandler({ payload }) {
     if (user.account_id) {
       const promiseArr = [
         findCall({ service: 'content/album', payload: { account_id: user.account_id } }),
+        getCall('security/account', user.account_id),
       ];
   
-      const [albums] = yield Promise.all(promiseArr);
+      const [albums, account] = yield Promise.all(promiseArr);
   
       yield put({ type: actions.SET_ALBUMS, payload: albums });
+      yield put({ type: actions.SET_FAMILY, payload: account });
     }
 
     payload('Albums');
@@ -76,20 +83,31 @@ function * loginHandler({ payload: { form, navigate } }) {
     if (user.account_id) {
       const promiseArr = [
         findCall({ service: 'content/album', payload: { account_id: user.account_id } }),
+        getCall('security/account', user.account_id),
       ];
   
-      const [albums] = yield Promise.all(promiseArr);
+      const [albums, account] = yield Promise.all(promiseArr);
   
       yield put({ type: actions.SET_ALBUMS, payload: albums });
+      yield put({ type: actions.SET_FAMILY, payload: account });
     }
     
-
     navigate();
     yield put({ type: actions.APP_LOADING, payload: false });
   } catch(e) {
     yield put({ type: actions.APP_LOADING, payload: false });
     alert(e.message);
     console.log('loginHandler error: ', e.message);
+  }
+}
+
+function * logoutHandler({ payload: navigate }) {
+  try {
+    yield put({ type: 'RESET' });
+    yield AsyncStorage.clear();
+    navigate();
+  } catch(e) {
+    console.log('logoutHandler error:', e);
   }
 }
 
@@ -100,5 +118,10 @@ const authenticateCreateCalls = async ({ service, payload={} }) => {
 
 const findCall = async ({ service, payload={} }) => {
   const { data } = await api.service(service).find(payload);
+  return data;
+};
+
+const getCall = async (service, id) => {
+  const { data } = await api.service(service).get(id);
   return data;
 };
